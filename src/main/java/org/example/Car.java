@@ -23,20 +23,17 @@ public class Car extends Thread {
                 MotionDirection nextAvailableAction = circularRoad.getNextAvailableAction(currentSector);
                 switch (nextAvailableAction) {
                     case LEFT: {
-                        circularRoad.getLeftRoad().lock(this, getCurrentSector(), nextAvailableAction);
-                        circularRoad.release(this, getCurrentSector());
+                        circularRoad.getLeftRoad().lock(this, getCurrentSector(), nextAvailableAction, getCurrentSector(), circularRoad);
                         circularRoad = circularRoad.getLeftRoad();
                         break;
                     }
                     case RIGHT: {
-                        circularRoad.getRightRoad().lock(this, getCurrentSector(), nextAvailableAction);
-                        circularRoad.release(this, getCurrentSector());
+                        circularRoad.getRightRoad().lock(this, getCurrentSector(), nextAvailableAction, getCurrentSector(), circularRoad);
                         circularRoad = circularRoad.getRightRoad();
                         break;
                     }
                     case STRAIGHT: {
-                        circularRoad.lock(this, getNextSector(), nextAvailableAction);
-                        circularRoad.release(this, getCurrentSector());
+                        circularRoad.lock(this, getNextSector(), nextAvailableAction, getCurrentSector(), circularRoad);
                         decrementSector();
                         break;
                     }

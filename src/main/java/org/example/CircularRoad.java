@@ -65,14 +65,20 @@ public class CircularRoad {
         return roadNumber;
     }
 
+    public ConcurrentHashMap<Integer, Lock> getSectors() {
+        return sectors;
+    }
+
     public void initialJoin(Car car, int toSector) throws InterruptedException {
         sectors.get(toSector).lock();
         System.out.println("Car with id " + car.getCarId() + " start initial join on road " + roadNumber + " and sector " + toSector);
         Thread.sleep(100L);
     }
 
-    public void lock(Car car, int whichLock, MotionDirection nextAvailableAction) throws InterruptedException {
+    public void lock(Car car, int whichLock, MotionDirection nextAvailableAction, int whichRelease, CircularRoad whichRoadRelease) throws InterruptedException {
         sectors.get(whichLock).lock();
+        whichRoadRelease.getSectors().get(whichRelease).unlock();
+        System.out.println("Car with id " + car.getCarId() + " end join on road " + roadNumber + " and sector " + whichRelease);
         System.out.println(nextAvailableAction + " car with id " + car.getCarId() + " start join on road " + roadNumber + " and sector " + whichLock);
         Thread.sleep(100L);
     }
@@ -80,6 +86,6 @@ public class CircularRoad {
     public void release(Car car, int whichRelease) {
         sectors.get(whichRelease).unlock();
         System.out.println("Car with id " + car.getCarId() + " end join on road " + roadNumber + " and sector " + whichRelease);
-
     }
+
 }
